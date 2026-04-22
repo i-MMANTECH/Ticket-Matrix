@@ -1,0 +1,297 @@
+{
+  "info": {
+    "_postman_id": "1e2d4c8a-7c64-4b7d-8e11-emmanuel-aro-tm",
+    "name": "Ticket Matrix API",
+    "description": "Emmanuel Aro's project submission for evaluation. Full CRUD + aggregation collection for the Nativetalk ticketing module backend (Django REST Framework). Set the `base_url` collection variable to your API root (defaults to http://localhost:8000/api).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Healthcheck",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health/",
+              "host": ["{{base_url}}"],
+              "path": ["health", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "List customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/customers/",
+              "host": ["{{base_url}}"],
+              "path": ["customers", ""]
+            }
+          }
+        },
+        {
+          "name": "Create customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.collectionVariables.set('customer_id', data.id);",
+                  "  console.log('Saved customer_id =', data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Adaeze Okafor\",\n  \"email\": \"adaeze+postman@nativetalk.test\",\n  \"phone\": \"+2348012345678\",\n  \"company\": \"Nativetalk Africa\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/customers/",
+              "host": ["{{base_url}}"],
+              "path": ["customers", ""]
+            }
+          }
+        },
+        {
+          "name": "Get customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/customers/{{customer_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["customers", "{{customer_id}}", ""]
+            }
+          }
+        },
+        {
+          "name": "Update customer",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company\": \"Nativetalk Group\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/customers/{{customer_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["customers", "{{customer_id}}", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete customer",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/customers/{{customer_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["customers", "{{customer_id}}", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tickets",
+      "item": [
+        {
+          "name": "List tickets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tickets/?ordering=-created_at",
+              "host": ["{{base_url}}"],
+              "path": ["tickets", ""],
+              "query": [
+                { "key": "ordering", "value": "-created_at" },
+                { "key": "status", "value": "open", "disabled": true },
+                { "key": "priority", "value": "high", "disabled": true },
+                { "key": "search", "value": "billing", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create ticket (inline customer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.collectionVariables.set('ticket_id', data.id);",
+                  "  console.log('Saved ticket_id =', data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"Cannot send bulk SMS campaign\",\n  \"description\": \"Trying to launch a campaign to 5,000 contacts but the dashboard returns a generic error after upload.\",\n  \"priority\": \"urgent\",\n  \"category\": \"technical\",\n  \"status\": \"open\",\n  \"assignee\": \"Support Tier 2\",\n  \"customer_name\": \"Adaeze Okafor\",\n  \"customer_email\": \"adaeze+postman@nativetalk.test\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/tickets/",
+              "host": ["{{base_url}}"],
+              "path": ["tickets", ""]
+            }
+          }
+        },
+        {
+          "name": "Create ticket (existing customer_id)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"Voice broadcast quality is poor\",\n  \"description\": \"Recipients report static and dropped audio on outbound voice broadcasts.\",\n  \"priority\": \"high\",\n  \"category\": \"technical\",\n  \"status\": \"in_progress\",\n  \"assignee\": \"Voice Eng\",\n  \"customer_id\": \"{{customer_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/tickets/",
+              "host": ["{{base_url}}"],
+              "path": ["tickets", ""]
+            }
+          }
+        },
+        {
+          "name": "Get ticket",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tickets/{{ticket_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["tickets", "{{ticket_id}}", ""]
+            }
+          }
+        },
+        {
+          "name": "Update ticket status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"resolved\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/tickets/{{ticket_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["tickets", "{{ticket_id}}", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete ticket",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tickets/{{ticket_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["tickets", "{{ticket_id}}", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comments",
+      "item": [
+        {
+          "name": "List comments for ticket",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tickets/{{ticket_id}}/comments/",
+              "host": ["{{base_url}}"],
+              "path": ["tickets", "{{ticket_id}}", "comments", ""]
+            }
+          }
+        },
+        {
+          "name": "Add comment to ticket",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"author_name\": \"Support Agent\",\n  \"author_email\": \"support@nativetalk.test\",\n  \"content\": \"Thanks for raising this — investigating now.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/tickets/{{ticket_id}}/comments/",
+              "host": ["{{base_url}}"],
+              "path": ["tickets", "{{ticket_id}}", "comments", ""]
+            }
+          }
+        },
+        {
+          "name": "List all comments (admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/comments/",
+              "host": ["{{base_url}}"],
+              "path": ["comments", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stats / Aggregation",
+      "item": [
+        {
+          "name": "Ticket stats (powers the dashboard)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tickets/stats/",
+              "host": ["{{base_url}}"],
+              "path": ["tickets", "stats", ""]
+            },
+            "description": "Returns total/by_status/by_priority/by_category counts plus completion_rate percentage."
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    { "key": "customer_id", "value": "", "type": "string" },
+    { "key": "ticket_id", "value": "", "type": "string" }
+  ]
+}
