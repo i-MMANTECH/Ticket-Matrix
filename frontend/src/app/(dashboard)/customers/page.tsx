@@ -31,8 +31,8 @@ export default function CustomersPage() {
   return (
     <>
       <div className="space-y-5">
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <div className="relative w-full max-w-md">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-center gap-3">
+          <div className="relative w-full sm:max-w-md">
             <span className="absolute inset-y-0 left-3 inline-flex items-center text-ink-400">
               <SearchIcon />
             </span>
@@ -43,12 +43,56 @@ export default function CustomersPage() {
               className="w-full bg-white border border-line pl-9 pr-3 py-2 text-sm focus:outline-none focus:border-ink-400"
             />
           </div>
-          <Button onClick={() => setShowModal(true)}>
+          <Button onClick={() => setShowModal(true)} className="sm:w-auto w-full">
             <PlusIcon /> New Customer
           </Button>
         </div>
 
-        <Card>
+        {/* Mobile card list (<md) */}
+        <div className="md:hidden space-y-3">
+          {error ? (
+            <div className="border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+              Failed to load customers.
+            </div>
+          ) : isLoading || !data ? (
+            <>
+              <div className="h-24 bg-ink-100 animate-pulse" />
+              <div className="h-24 bg-ink-100 animate-pulse" />
+              <div className="h-24 bg-ink-100 animate-pulse" />
+            </>
+          ) : data.results.length === 0 ? (
+            <div className="border border-dashed border-ink-200 bg-white px-6 py-12 text-center text-sm text-ink-400">
+              No customers found.
+            </div>
+          ) : (
+            data.results.map((customer) => (
+              <div key={customer.id} className="bg-white border border-line shadow-card p-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 bg-ink-200 text-ink-700 text-xs font-semibold flex items-center justify-center">
+                    {initials(customer.name)}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-ink-900 truncate">{customer.name}</p>
+                    <p className="text-xs text-ink-500 truncate">{customer.email}</p>
+                  </div>
+                  <TagBadge tag={customer.tag} />
+                </div>
+                <div className="mt-3 flex items-center justify-between text-xs text-ink-500">
+                  <span>{customer.phone || "—"}</span>
+                  <ChannelIcons channels={customer.channels} />
+                </div>
+              </div>
+            ))
+          )}
+          {data ? (
+            <p className="text-[11px] text-ink-400 text-center pt-1">
+              Showing {data.results.length} of {data.count} entries
+            </p>
+          ) : null}
+        </div>
+
+        {/* Tablet/desktop table (md+) */}
+        <Card className="hidden md:block">
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
               <thead className="border-b border-line">

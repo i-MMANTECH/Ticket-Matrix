@@ -3,6 +3,8 @@
 
 import { usePathname } from "next/navigation";
 
+import { MobileNav } from "./MobileNav";
+
 const TITLES: { match: RegExp; title: string }[] = [
   { match: /^\/dashboard/, title: "Dashboard" },
   { match: /^\/tickets\/[^/]+$/, title: "Ticket Detail" },
@@ -16,10 +18,13 @@ export function Topbar() {
 
   return (
     <header className="bg-white border-b border-line">
-      <div className="px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
-        <h1 className="text-xl font-semibold text-ink-900 tracking-tight">
-          {meta.title}
-        </h1>
+      <div className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <MobileNav />
+          <h1 className="text-base sm:text-lg lg:text-xl font-semibold text-ink-900 tracking-tight">
+            {meta.title}
+          </h1>
+        </div>
 
         <button
           aria-label="Notifications"
