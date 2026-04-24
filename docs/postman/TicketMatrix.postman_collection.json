@@ -60,7 +60,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Adaeze Okafor\",\n  \"email\": \"adaeze+postman@nativetalk.test\",\n  \"phone\": \"+2348012345678\",\n  \"company\": \"Nativetalk Africa\"\n}"
+              "raw": "{\n  \"name\": \"Adaeze Okafor\",\n  \"email\": \"adaeze+postman@nativetalk.test\",\n  \"phone\": \"+234 810 179 0957\",\n  \"company\": \"Nativetalk Africa\",\n  \"tag\": \"vip\",\n  \"channels\": [\"instagram\", \"facebook\", \"whatsapp\"]\n}"
             },
             "url": {
               "raw": "{{base_url}}/customers/",
@@ -88,7 +88,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"company\": \"Nativetalk Group\"\n}"
+              "raw": "{\n  \"company\": \"Nativetalk Group\",\n  \"tag\": \"frequent\",\n  \"channels\": [\"whatsapp\", \"email\"]\n}"
             },
             "url": {
               "raw": "{{base_url}}/customers/{{customer_id}}/",
@@ -154,7 +154,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"subject\": \"Cannot send bulk SMS campaign\",\n  \"description\": \"Trying to launch a campaign to 5,000 contacts but the dashboard returns a generic error after upload.\",\n  \"priority\": \"urgent\",\n  \"category\": \"technical\",\n  \"status\": \"open\",\n  \"assignee\": \"Support Tier 2\",\n  \"customer_name\": \"Adaeze Okafor\",\n  \"customer_email\": \"adaeze+postman@nativetalk.test\"\n}"
+              "raw": "{\n  \"subject\": \"Cannot send bulk SMS campaign\",\n  \"description\": \"Trying to launch a campaign to 5,000 contacts but the dashboard returns a generic error after upload.\",\n  \"priority\": \"urgent\",\n  \"category\": \"technical\",\n  \"status\": \"in_progress\",\n  \"assignee\": \"Support Tier 2\",\n  \"progress\": 25,\n  \"customer_name\": \"Adaeze Okafor\",\n  \"customer_email\": \"adaeze+postman@nativetalk.test\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/tickets/",
@@ -198,7 +198,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"status\": \"resolved\"\n}"
+              "raw": "{\n  \"status\": \"resolved\",\n  \"progress\": 100\n}"
             },
             "url": {
               "raw": "{{base_url}}/tickets/{{ticket_id}}/",
