@@ -14,6 +14,7 @@ import {
   CATEGORY_LABEL,
   PRIORITY_LABEL,
   PRIORITY_TONE,
+  PROGRESS_BAR_COLOR,
   STATUS_LABEL,
   STATUS_TONE,
   formatDateTime,
@@ -32,15 +33,15 @@ export default function TicketDetailPage() {
     return (
       <Card>
         <CardBody>
-          <p className="text-sm text-danger">
+          <p className="text-sm text-red-600">
             Could not load this ticket. It may have been deleted, or the API
             isn&apos;t reachable.
           </p>
           <Link
             href="/tickets"
-            className="mt-3 inline-block text-xs uppercase tracking-widest text-accent hover:underline"
+            className="mt-3 inline-block text-xs uppercase tracking-widest text-brand-700 hover:underline"
           >
-            ← Back to inbox
+            ← Back to tickets
           </Link>
         </CardBody>
       </Card>
@@ -51,30 +52,30 @@ export default function TicketDetailPage() {
     return <div className="h-64 bg-ink-100 animate-pulse" />;
   }
 
-  return (
-    <div className="space-y-4">
-      <div>
-        <Link
-          href="/tickets"
-          className="text-xs uppercase tracking-widest text-ink-400 hover:text-ink-700"
-        >
-          ← Tickets inbox
-        </Link>
-      </div>
+  const progress = Math.max(0, Math.min(100, data.progress ?? 0));
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 space-y-4">
+  return (
+    <div className="space-y-5">
+      <Link
+        href="/tickets"
+        className="text-xs uppercase tracking-widest text-ink-500 hover:text-ink-800"
+      >
+        ← Back to tickets
+      </Link>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="lg:col-span-2 space-y-5">
           <Card>
             <CardHeader>
               <div>
-                <p className="font-mono text-[11px] uppercase tracking-widest text-ink-400">
+                <p className="font-mono text-[11px] uppercase tracking-widest text-ink-500">
                   {data.reference}
                 </p>
-                <h2 className="mt-1 text-xl font-semibold text-ink tracking-tight">
+                <h2 className="mt-1 text-xl font-semibold text-ink-900">
                   {data.subject}
                 </h2>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <Badge tone={PRIORITY_TONE[data.priority]}>
                   {PRIORITY_LABEL[data.priority]}
                 </Badge>
@@ -83,11 +84,25 @@ export default function TicketDetailPage() {
                 </Badge>
               </div>
             </CardHeader>
-            <CardBody>
+            <CardBody className="space-y-5">
               <p className="whitespace-pre-wrap text-sm leading-6 text-ink-700">
                 {data.description}
               </p>
-              <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+
+              <div>
+                <div className="flex items-center justify-between text-xs text-ink-500 mb-1.5">
+                  <span>Progress</span>
+                  <span className="font-medium text-ink-800">{progress}%</span>
+                </div>
+                <div className="h-1.5 bg-ink-100">
+                  <div
+                    className={`h-full ${PROGRESS_BAR_COLOR[data.status]}`}
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <Meta label="Category" value={CATEGORY_LABEL[data.category]} />
                 <Meta label="Assignee" value={data.assignee || "Unassigned"} />
                 <Meta label="Created" value={formatDateTime(data.created_at)} />
@@ -106,25 +121,25 @@ export default function TicketDetailPage() {
                   No comments yet. Add the first one below.
                 </p>
               ) : (
-                <ul className="space-y-4">
+                <ul className="space-y-3">
                   {data.comments.map((comment) => (
                     <li
                       key={comment.id}
                       className="flex gap-3 border border-line bg-canvas/40 p-4"
                     >
-                      <div className="h-9 w-9 shrink-0 bg-ink-700 text-white text-[11px] font-semibold flex items-center justify-center">
+                      <div className="h-9 w-9 shrink-0 bg-ink-200 text-ink-700 text-[11px] font-semibold flex items-center justify-center">
                         {initials(comment.author_name)}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between gap-3">
-                          <p className="text-sm font-medium text-ink">
+                          <p className="text-sm font-medium text-ink-900">
                             {comment.author_name}
                           </p>
                           <span className="text-[11px] uppercase tracking-widest text-ink-400">
                             {formatRelative(comment.created_at)}
                           </span>
                         </div>
-                        <p className="mt-2 text-sm text-ink-700 whitespace-pre-wrap">
+                        <p className="mt-1.5 text-sm text-ink-700 whitespace-pre-wrap">
                           {comment.content}
                         </p>
                       </div>
@@ -145,21 +160,21 @@ export default function TicketDetailPage() {
           </Card>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-5">
           <Card>
             <CardHeader>
               <CardTitle>Customer</CardTitle>
             </CardHeader>
             <CardBody className="space-y-3">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 bg-ink text-white text-sm font-semibold flex items-center justify-center">
+                <div className="h-10 w-10 bg-ink-200 text-ink-700 text-sm font-semibold flex items-center justify-center">
                   {initials(data.customer.name)}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-ink truncate">
+                  <p className="text-sm font-medium text-ink-900 truncate">
                     {data.customer.name}
                   </p>
-                  <p className="text-xs text-ink-400 truncate">
+                  <p className="text-xs text-ink-500 truncate">
                     {data.customer.email}
                   </p>
                 </div>
@@ -180,7 +195,7 @@ export default function TicketDetailPage() {
             <CardBody className="space-y-3">
               <StatusActions ticketId={data.id} current={data.status} />
               <p className="text-[11px] uppercase tracking-widest text-ink-400">
-                Updates broadcast to the inbox and dashboard automatically.
+                Status changes propagate to the dashboard and inbox.
               </p>
             </CardBody>
           </Card>

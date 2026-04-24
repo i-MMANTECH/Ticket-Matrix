@@ -12,7 +12,6 @@ import { api, type NewTicketPayload } from "@/lib/api";
 import {
   CATEGORY_LABEL,
   PRIORITY_LABEL,
-  STATUS_LABEL,
 } from "@/lib/format";
 
 const EMPTY: NewTicketPayload = {
@@ -49,21 +48,31 @@ export function NewTicketModal({
     event.preventDefault();
     setError(null);
 
+    if (!form.customer_name?.trim()) {
+      setError("Customer name is required.");
+      return;
+    }
     if (!form.subject.trim() || !form.description.trim()) {
       setError("Subject and description are required.");
       return;
     }
-    if (!form.customer_name?.trim() || !form.customer_email?.trim()) {
-      setError("Customer name and email are required.");
-      return;
-    }
+
+    // Synthesize an email from the name when none provided so the inline
+    // customer flow works with just the name field shown in the design.
+    const synthesizedEmail =
+      form.customer_email?.trim() ||
+      `${form.customer_name.trim().toLowerCase().replace(/\s+/g, ".")}@nativetalk.test`;
 
     setSubmitting(true);
     try {
-      const created = await api.createTicket(form);
+      const created = await api.createTicket({
+        ...form,
+        customer_email: synthesizedEmail,
+      });
       await Promise.all([
         mutate((key) => typeof key === "string" && key.startsWith("/tickets/")),
         mutate("/tickets/stats/"),
+        mutate((key) => typeof key === "string" && key.startsWith("/customers/")),
       ]);
       setForm(EMPTY);
       onClose();
@@ -80,86 +89,42 @@ export function NewTicketModal({
       open={open}
       onClose={onClose}
       title="New Ticket"
+      icon={<TicketGlyph />}
       footer={
         <>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={onClose}
-            disabled={submitting}
-          >
+          <Button variant="secondary" onClick={onClose} disabled={submitting}>
             Cancel
           </Button>
-          <Button
-            type="submit"
-            form="new-ticket-form"
-            disabled={submitting}
-          >
-            {submitting ? "Creating..." : "Create ticket"}
+          <Button type="submit" form="new-ticket-form" disabled={submitting}>
+            {submitting ? "Creating..." : "Create Ticket"}
           </Button>
         </>
       }
     >
-      <form
-        id="new-ticket-form"
-        onSubmit={handleSubmit}
-        className="space-y-4"
-      >
+      <form id="new-ticket-form" onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <Label htmlFor="subject" required>
-            Subject
-          </Label>
+          <Label htmlFor="customer_name">Customer Name</Label>
+          <Input
+            id="customer_name"
+            placeholder="Joseph Olorunmeyan"
+            value={form.customer_name}
+            onChange={(e) => update("customer_name", e.target.value)}
+            required
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="subject">Subject</Label>
           <Input
             id="subject"
-            placeholder="Briefly describe the issue"
+            placeholder="Brief description of the issue"
             value={form.subject}
             onChange={(e) => update("subject", e.target.value)}
             required
           />
         </div>
 
-        <div>
-          <Label htmlFor="description" required>
-            Description
-          </Label>
-          <Textarea
-            id="description"
-            placeholder="Steps to reproduce, expected vs actual behaviour, screenshots..."
-            value={form.description}
-            onChange={(e) => update("description", e.target.value)}
-            required
-          />
-        </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="customer_name" required>
-              Customer name
-            </Label>
-            <Input
-              id="customer_name"
-              placeholder="e.g. Adaeze Okafor"
-              value={form.customer_name}
-              onChange={(e) => update("customer_name", e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <Label htmlFor="customer_email" required>
-              Customer email
-            </Label>
-            <Input
-              id="customer_email"
-              type="email"
-              placeholder="customer@example.com"
-              value={form.customer_email}
-              onChange={(e) => update("customer_email", e.target.value)}
-              required
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <Label htmlFor="priority">Priority</Label>
             <Select
@@ -196,28 +161,10 @@ export function NewTicketModal({
               )}
             </Select>
           </div>
-          <div>
-            <Label htmlFor="status">Status</Label>
-            <Select
-              id="status"
-              value={form.status}
-              onChange={(e) =>
-                update("status", e.target.value as NewTicketPayload["status"])
-              }
-            >
-              {(Object.keys(STATUS_LABEL) as (keyof typeof STATUS_LABEL)[]).map(
-                (key) => (
-                  <option key={key} value={key}>
-                    {STATUS_LABEL[key]}
-                  </option>
-                ),
-              )}
-            </Select>
-          </div>
         </div>
 
         <div>
-          <Label htmlFor="assignee">Assignee (optional)</Label>
+          <Label htmlFor="assignee">Assign To (Optional)</Label>
           <Input
             id="assignee"
             placeholder="Team or person responsible"
@@ -226,12 +173,35 @@ export function NewTicketModal({
           />
         </div>
 
+        <div>
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
+            placeholder="Monthly Product Discussion by Design and Marketing Teams with CEO to plan our future products sales and reports"
+            value={form.description}
+            onChange={(e) => update("description", e.target.value)}
+            required
+          />
+        </div>
+
         {error ? (
-          <div className="border border-danger/40 bg-red-50 px-3 py-2 text-xs text-danger">
+          <div className="border border-red-300 bg-red-50 px-3 py-2 text-xs text-red-700">
             {error}
           </div>
         ) : null}
       </form>
     </Modal>
+  );
+}
+
+function TicketGlyph() {
+  return (
+    <span className="inline-flex items-center justify-center h-7 w-7 bg-tile-purple text-purple-700">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" />
+        <path d="M9 9h6v6H9z" />
+      </svg>
+    </span>
   );
 }
