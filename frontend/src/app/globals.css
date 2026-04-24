@@ -13,8 +13,8 @@ body {
 }
 
 body {
-  background-color: #f4f5f7;
-  color: #0b0f14;
+  background-color: #F7F8FA;
+  color: #0F172A;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -23,7 +23,8 @@ body {
 
 /*
  * Strict design enforcement: zero border-radius across the entire surface.
- * This survives third-party components and stray inline styles.
+ * Honors the architectural design rule even when third-party components or
+ * stray inline styles try to round corners.
  */
 *,
 *::before,
@@ -31,17 +32,16 @@ body {
   border-radius: 0 !important;
 }
 
-/* Subtle scrollbar tuned for the architectural palette */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #f4f5f7;
+  background: #F7F8FA;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c9cdd3;
+  background: #CBD5E1;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #9ba3ac;
+  background: #94A3B8;
 }

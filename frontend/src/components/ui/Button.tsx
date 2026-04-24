@@ -6,11 +6,11 @@ type Size = "sm" | "md";
 
 const VARIANTS: Record<Variant, string> = {
   primary:
-    "bg-ink text-white hover:bg-ink-700 disabled:bg-ink-300 disabled:cursor-not-allowed",
+    "bg-brand text-white hover:bg-brand-600 disabled:bg-brand-200 disabled:cursor-not-allowed",
   secondary:
-    "bg-white text-ink border border-ink-200 hover:border-ink-400 hover:bg-ink-50",
+    "bg-white text-ink-700 border border-ink-200 hover:border-ink-400 hover:bg-ink-50",
   ghost: "bg-transparent text-ink-600 hover:bg-ink-100",
-  danger: "bg-danger text-white hover:bg-red-700",
+  danger: "bg-red-600 text-white hover:bg-red-700",
 };
 
 const SIZES: Record<Size, string> = {
@@ -32,7 +32,7 @@ export function Button({
   return (
     <button
       {...rest}
-      className={`inline-flex items-center justify-center font-medium tracking-wide transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${VARIANTS[variant]} ${SIZES[size]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 font-medium tracking-wide transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand ${VARIANTS[variant]} ${SIZES[size]} ${className}`}
     />
   );
 }

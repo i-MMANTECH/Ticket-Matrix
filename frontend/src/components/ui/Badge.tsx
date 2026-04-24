@@ -10,7 +10,7 @@ export function Badge({
 }) {
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide ${tone}`}
+      className={`inline-flex items-center px-2 py-0.5 text-[11px] font-medium ${tone}`}
     >
       {children}
     </span>

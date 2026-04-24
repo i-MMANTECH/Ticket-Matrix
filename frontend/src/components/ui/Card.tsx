@@ -32,7 +32,7 @@ export function CardTitle({
   return (
     <h2
       {...rest}
-      className={`text-sm font-semibold uppercase tracking-wider text-ink-700 ${className}`}
+      className={`text-sm font-semibold text-ink-900 ${className}`}
     />
   );
 }

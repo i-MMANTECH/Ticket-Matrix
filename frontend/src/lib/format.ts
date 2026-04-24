@@ -6,11 +6,11 @@ import type {
 } from "@/lib/api";
 
 export const STATUS_LABEL: Record<TicketStatus, string> = {
-  open: "Open",
+  open: "To do",
   in_progress: "In Progress",
-  on_hold: "On Hold",
-  resolved: "Resolved",
-  closed: "Closed",
+  on_hold: "Overdue",
+  resolved: "Done",
+  closed: "Done",
 };
 
 export const PRIORITY_LABEL: Record<TicketPriority, string> = {
@@ -28,19 +28,29 @@ export const CATEGORY_LABEL: Record<TicketCategory, string> = {
   general: "General",
 };
 
+// Tones map to Figma chip backgrounds + foregrounds
 export const STATUS_TONE: Record<TicketStatus, string> = {
-  open: "bg-accent-soft text-accent border border-accent/30",
-  in_progress: "bg-amber-50 text-amber-700 border border-amber-300/60",
-  on_hold: "bg-ink-100 text-ink-600 border border-ink-200",
-  resolved: "bg-emerald-50 text-emerald-700 border border-emerald-300/60",
-  closed: "bg-ink-200 text-ink-700 border border-ink-300",
+  open:        "bg-status-todoBg text-status-todoFg",
+  in_progress: "bg-status-inProgressBg text-status-inProgressFg",
+  on_hold:     "bg-status-overdueBg text-status-overdueFg",
+  resolved:    "bg-status-doneBg text-status-doneFg",
+  closed:      "bg-status-doneBg text-status-doneFg",
 };
 
 export const PRIORITY_TONE: Record<TicketPriority, string> = {
-  low: "bg-ink-100 text-ink-600 border border-ink-200",
-  medium: "bg-sky-50 text-sky-700 border border-sky-300/60",
-  high: "bg-orange-50 text-orange-700 border border-orange-300/60",
-  urgent: "bg-red-50 text-red-700 border border-red-300/60",
+  low:    "bg-status-lowBg text-status-lowFg",
+  medium: "bg-status-mediumBg text-status-mediumFg",
+  high:   "bg-status-highBg text-status-highFg",
+  urgent: "bg-status-highBg text-status-highFg",
+};
+
+// Progress bar colors mirror status tone (orange in-progress / overdue, green done, gray todo)
+export const PROGRESS_BAR_COLOR: Record<TicketStatus, string> = {
+  open:        "bg-ink-300",
+  in_progress: "bg-amber-500",
+  on_hold:     "bg-orange-500",
+  resolved:    "bg-brand",
+  closed:      "bg-brand",
 };
 
 export function formatDateTime(iso: string): string {
@@ -51,6 +61,14 @@ export function formatDateTime(iso: string): string {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
+  });
+}
+
+export function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
   });
 }
 

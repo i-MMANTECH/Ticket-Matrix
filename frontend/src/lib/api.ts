@@ -1,6 +1,6 @@
 // Emmanuel Aro's project submission for evaluation.
 //
-// Thin typed client over the Django REST API. Centralised so that swapping
+// Thin typed client over the Django REST API. Centralised so swapping
 // transports or adding auth later is a one-file change.
 
 export const API_BASE_URL =
@@ -22,6 +22,10 @@ export type TicketCategory =
   | "feature_request"
   | "general";
 
+export type CustomerTag = "" | "vip" | "frequent" | "new";
+
+export type CustomerChannel = "instagram" | "facebook" | "whatsapp" | "email" | "sms";
+
 export interface Customer {
   id: string;
   name: string;
@@ -29,6 +33,8 @@ export interface Customer {
   phone: string;
   company: string;
   avatar_url: string;
+  tag: CustomerTag;
+  channels: CustomerChannel[];
   created_at: string;
   updated_at: string;
 }
@@ -51,6 +57,7 @@ export interface TicketListItem {
   category: TicketCategory;
   status: TicketStatus;
   assignee: string;
+  progress: number;
   comments_count: number;
   created_at: string;
   updated_at: string;
@@ -75,6 +82,7 @@ export interface TicketStats {
   by_status: Record<TicketStatus, number>;
   by_priority: { priority: TicketPriority; count: number }[];
   by_category: { category: TicketCategory; count: number }[];
+  monthly_completion: { month: string; rate: number }[];
 }
 
 export interface NewTicketPayload {
@@ -84,9 +92,19 @@ export interface NewTicketPayload {
   category: TicketCategory;
   status?: TicketStatus;
   assignee?: string;
+  progress?: number;
   customer_id?: string;
   customer_name?: string;
   customer_email?: string;
+}
+
+export interface NewCustomerPayload {
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  tag?: CustomerTag;
+  channels?: CustomerChannel[];
 }
 
 async function request<T>(
@@ -117,9 +135,7 @@ async function request<T>(
     throw new Error(message);
   }
 
-  if (response.status === 204) {
-    return undefined as T;
-  }
+  if (response.status === 204) return undefined as T;
   return (await response.json()) as T;
 }
 
@@ -159,5 +175,14 @@ export const api = {
 
   stats: () => request<TicketStats>("/tickets/stats/"),
 
-  listCustomers: () => request<Paginated<Customer>>("/customers/"),
+  listCustomers: (params?: Record<string, string>) => {
+    const search = params ? `?${new URLSearchParams(params).toString()}` : "";
+    return request<Paginated<Customer>>(`/customers/${search}`);
+  },
+
+  createCustomer: (payload: NewCustomerPayload) =>
+    request<Customer>("/customers/", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
 };

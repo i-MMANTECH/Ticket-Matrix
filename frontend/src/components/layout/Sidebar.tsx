@@ -5,53 +5,108 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/tickets", label: "Tickets" },
-  { href: "/tickets?filter=open", label: "Open Tickets" },
-  { href: "/tickets?filter=resolved", label: "Resolved" },
+  { href: "/dashboard", label: "Home", icon: HomeIcon },
+  { href: "/tickets",   label: "Tickets", icon: TicketIcon },
+  { href: "/customers", label: "Customers", icon: UsersIcon },
 ];
 
 export function Sidebar() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
 
   return (
-    <aside className="hidden lg:flex w-60 shrink-0 flex-col bg-ink text-ink-100 border-r border-ink-700">
-      <div className="px-5 py-5 border-b border-ink-700">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 bg-accent flex items-center justify-center text-white font-bold tracking-tight">
-            N
-          </div>
-          <div>
-            <p className="text-sm font-semibold tracking-wide">Nativetalk</p>
-            <p className="text-[10px] uppercase tracking-widest text-ink-300">
-              Ticketing
-            </p>
-          </div>
-        </div>
+    <aside className="hidden lg:flex w-64 shrink-0 flex-col bg-white border-r border-line">
+      <div className="px-6 py-5">
+        <Logo />
       </div>
-      <nav className="flex-1 px-2 py-4 space-y-0.5">
-        {NAV.map((item) => {
+
+      <p className="px-6 mt-2 text-[11px] uppercase tracking-widest text-ink-400">
+        Main Menu
+      </p>
+
+      <nav className="flex-1 px-3 mt-3 space-y-1">
+        {NAV.map(({ href, label, icon: Icon }) => {
           const active =
-            pathname === item.href.split("?")[0] ||
-            (item.href === "/tickets" && pathname?.startsWith("/tickets"));
+            href === "/dashboard"
+              ? pathname.startsWith("/dashboard")
+              : pathname.startsWith(href);
           return (
             <Link
-              key={item.href + item.label}
-              href={item.href}
-              className={`block px-3 py-2 text-sm tracking-wide ${
+              key={href}
+              href={href}
+              className={`flex items-center gap-3 px-3 py-2.5 text-sm tracking-wide transition-colors ${
                 active
-                  ? "bg-ink-700 text-white border-l-2 border-accent"
-                  : "text-ink-200 hover:bg-ink-700/60 hover:text-white"
+                  ? "bg-brand-50 text-brand-700 border-l-2 border-brand"
+                  : "text-ink-600 hover:bg-ink-50 hover:text-ink-900"
               }`}
             >
-              {item.label}
+              <Icon className={active ? "text-brand-600" : "text-ink-400"} />
+              <span className="font-medium">{label}</span>
             </Link>
           );
         })}
       </nav>
-      <div className="px-5 py-4 border-t border-ink-700 text-[11px] uppercase tracking-widest text-ink-300">
-        v0.1 · MVP
+
+      <div className="px-4 py-4 border-t border-line flex items-center gap-3">
+        <div className="h-9 w-9 bg-ink-200 text-ink-700 text-xs font-semibold flex items-center justify-center">
+          EA
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-medium text-ink-900 truncate">Emmanuel Aro</p>
+          <p className="text-[11px] text-ink-400 truncate">Admin</p>
+        </div>
+        <ChevronRight className="text-ink-400" />
       </div>
     </aside>
+  );
+}
+
+function Logo() {
+  return (
+    <div className="flex items-center gap-1 select-none">
+      <span className="text-[22px] font-semibold tracking-tight text-[#1F4DB8]">
+        native
+      </span>
+      <span className="bg-brand text-white text-[14px] font-semibold px-2.5 py-1 leading-none">
+        talk
+      </span>
+    </div>
+  );
+}
+
+/* ---- Icons (inline SVG, no external deps) ---- */
+function HomeIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M3 11l9-8 9 8v10a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2V11z" />
+    </svg>
+  );
+}
+function TicketIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M2 9a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v2a2 2 0 0 0 0 4v2a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3v-2a2 2 0 0 0 0-4V9z" />
+      <path d="M9 6v12" />
+    </svg>
+  );
+}
+function UsersIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+function ChevronRight({ className = "" }: { className?: string }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M9 18l6-6-6-6" />
+    </svg>
   );
 }
