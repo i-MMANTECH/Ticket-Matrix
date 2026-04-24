@@ -1,5 +1,6 @@
 # Emmanuel Aro's project submission for evaluation.
 from django.db.models import Count, Q
+from django.db.models.functions import TruncMonth
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -85,6 +86,37 @@ class TicketStatsView(APIView):
         for row in status_counts:
             status_map[row["status"]] = row["count"]
 
+        # Monthly completion rate for the dashboard bar chart.
+        # Returns 12 buckets (Jan..Dec) for the current year, each as a
+        # percentage of tickets created in that month that have been resolved.
+        monthly_qs = (
+            qs.annotate(month=TruncMonth("created_at"))
+            .values("month")
+            .annotate(
+                total=Count("id"),
+                done=Count(
+                    "id",
+                    filter=Q(status=Ticket.Status.RESOLVED)
+                    | Q(status=Ticket.Status.CLOSED),
+                ),
+            )
+        )
+        rates_by_month: dict[int, float] = {}
+        for row in monthly_qs:
+            month = row["month"]
+            if month is None:
+                continue
+            rate = (row["done"] / row["total"]) * 100 if row["total"] else 0.0
+            rates_by_month[month.month] = round(rate, 2)
+        month_labels = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+        ]
+        monthly_completion = [
+            {"month": label, "rate": rates_by_month.get(idx + 1, 0.0)}
+            for idx, label in enumerate(month_labels)
+        ]
+
         return Response(
             {
                 "total": total,
@@ -93,6 +125,7 @@ class TicketStatsView(APIView):
                 "by_status": status_map,
                 "by_priority": list(priority_counts),
                 "by_category": list(category_counts),
+                "monthly_completion": monthly_completion,
             }
         )
 

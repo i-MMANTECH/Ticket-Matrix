@@ -46,6 +46,7 @@ class Ticket(models.Model):
         max_length=16, choices=Status.choices, default=Status.OPEN
     )
     assignee = models.CharField(max_length=120, blank=True, default="")
+    progress = models.PositiveSmallIntegerField(default=0)  # 0..100
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

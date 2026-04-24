@@ -37,6 +37,7 @@ class TicketListSerializer(serializers.ModelSerializer):
             "category",
             "status",
             "assignee",
+            "progress",
             "comments_count",
             "created_at",
             "updated_at",
@@ -59,6 +60,7 @@ class TicketDetailSerializer(serializers.ModelSerializer):
             "category",
             "status",
             "assignee",
+            "progress",
             "comments",
             "created_at",
             "updated_at",
@@ -97,6 +99,7 @@ class TicketCreateSerializer(serializers.ModelSerializer):
             "category",
             "status",
             "assignee",
+            "progress",
             "created_at",
             "updated_at",
         ]
