@@ -1,21 +1,37 @@
 // Emmanuel Aro's project submission for evaluation.
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import useSWR from "swr";
 
-import { CompletionGauge } from "@/components/dashboard/CompletionGauge";
+import { CompletionChart } from "@/components/dashboard/CompletionChart";
 import { MetricCard } from "@/components/dashboard/MetricCard";
-import { StatusBreakdown } from "@/components/dashboard/StatusBreakdown";
-import { Badge } from "@/components/ui/Badge";
+import { QuickActions } from "@/components/dashboard/QuickActions";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/Button";
 import { Card, CardBody, CardHeader, CardTitle } from "@/components/ui/Card";
-import { api, type Paginated, type TicketListItem, type TicketStats } from "@/lib/api";
-import { PRIORITY_TONE, STATUS_TONE, formatRelative, PRIORITY_LABEL, STATUS_LABEL } from "@/lib/format";
+import { NewTicketModal } from "@/components/tickets/NewTicketModal";
+import { NewCustomerModal } from "@/components/customers/NewCustomerModal";
+import {
+  api,
+  type Paginated,
+  type TicketListItem,
+  type TicketStats,
+  type Customer,
+} from "@/lib/api";
 
 export default function DashboardPage() {
-  const { data: stats, error: statsError } = useSWR<TicketStats>(
+  const router = useRouter();
+  const [showTicketModal, setShowTicketModal] = useState(false);
+  const [showCustomerModal, setShowCustomerModal] = useState(false);
+
+  const { data: stats, error } = useSWR<TicketStats>(
     "/tickets/stats/",
+    api.fetcher,
+  );
+  const { data: customers } = useSWR<Paginated<Customer>>(
+    "/customers/",
     api.fetcher,
   );
   const { data: recent } = useSWR<Paginated<TicketListItem>>(
@@ -23,162 +39,124 @@ export default function DashboardPage() {
     api.fetcher,
   );
 
-  const totals = stats?.total ?? 0;
-  const open = stats?.by_status.open ?? 0;
-  const inProgress = stats?.by_status.in_progress ?? 0;
-  const resolved = (stats?.by_status.resolved ?? 0) + (stats?.by_status.closed ?? 0);
+  const commentsTotal =
+    recent?.results.reduce((sum, t) => sum + (t.comments_count ?? 0), 0) ?? 0;
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard label="Total tickets" value={totals} delta="All time" />
-        <MetricCard
-          label="Open"
-          value={open}
-          delta="Awaiting first response"
-          tone="warning"
+    <>
+      <div className="space-y-5">
+        <PageHeader
+          lastUpdated={recent?.results[0]?.updated_at}
+          right={
+            <Button variant="secondary" size="sm">
+              <FilterIcon /> Filter
+            </Button>
+          }
         />
-        <MetricCard
-          label="In progress"
-          value={inProgress}
-          delta="Being worked on"
-        />
-        <MetricCard
-          label="Resolved"
-          value={resolved}
-          delta="Closed or marked resolved"
-          tone="positive"
-        />
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card className="lg:col-span-1">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <MetricCard label="Comments" value={commentsTotal} tone="green" icon={<ChatIcon />} />
+          <MetricCard label="Customers" value={customers?.count ?? 0} tone="blue" icon={<PeopleIcon />} />
+          <MetricCard label="Tickets" value={stats?.total ?? 0} tone="purple" icon={<TicketSquareIcon />} />
+        </div>
+
+        <Card>
           <CardHeader>
             <CardTitle>Tickets Completion Rate</CardTitle>
-            <span className="text-[11px] uppercase tracking-widest text-ink-400">
-              Live
-            </span>
           </CardHeader>
           <CardBody>
-            {statsError ? (
+            {error ? (
               <ApiError />
             ) : stats ? (
-              <CompletionGauge
-                rate={stats.completion_rate}
-                completed={stats.completed}
-                total={stats.total}
-              />
+              <CompletionChart data={stats.monthly_completion} />
             ) : (
-              <Skeleton className="h-40" />
+              <div className="h-56 bg-ink-100 animate-pulse" />
             )}
           </CardBody>
         </Card>
 
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Status Breakdown</CardTitle>
-            <Link
-              href="/tickets"
-              className="text-xs uppercase tracking-widest text-accent hover:underline"
-            >
-              View all
-            </Link>
-          </CardHeader>
-          <CardBody>
-            {stats ? (
-              <StatusBreakdown
-                byStatus={stats.by_status}
-                total={stats.total || 1}
-              />
-            ) : (
-              <Skeleton className="h-40" />
-            )}
-          </CardBody>
-        </Card>
+        <QuickActions
+          actions={[
+            {
+              label: "Create New Customer",
+              tone: "blue",
+              icon: <PeopleIcon />,
+              onClick: () => setShowCustomerModal(true),
+            },
+            {
+              label: "Create New Ticket",
+              tone: "purple",
+              icon: <TicketSquareIcon />,
+              onClick: () => setShowTicketModal(true),
+            },
+            {
+              label: "View All Tickets",
+              tone: "green",
+              icon: <ListIcon />,
+              onClick: () => router.push("/tickets"),
+            },
+          ]}
+        />
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Tickets</CardTitle>
-          <Link href="/tickets">
-            <Button variant="secondary" size="sm">
-              Open ticket inbox
-            </Button>
-          </Link>
-        </CardHeader>
-        <CardBody className="p-0">
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead className="bg-canvas border-b border-line">
-                <tr className="text-left text-[11px] uppercase tracking-widest text-ink-500">
-                  <th className="px-5 py-3 font-semibold">Reference</th>
-                  <th className="px-5 py-3 font-semibold">Subject</th>
-                  <th className="px-5 py-3 font-semibold">Customer</th>
-                  <th className="px-5 py-3 font-semibold">Priority</th>
-                  <th className="px-5 py-3 font-semibold">Status</th>
-                  <th className="px-5 py-3 font-semibold">Updated</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recent?.results.slice(0, 6).map((t) => (
-                  <tr
-                    key={t.id}
-                    className="border-b border-line last:border-b-0 hover:bg-canvas/60"
-                  >
-                    <td className="px-5 py-3 font-mono text-xs text-ink-600">
-                      <Link href={`/tickets/${t.id}`} className="hover:text-accent">
-                        {t.reference}
-                      </Link>
-                    </td>
-                    <td className="px-5 py-3 text-ink">
-                      <Link href={`/tickets/${t.id}`} className="hover:underline">
-                        {t.subject}
-                      </Link>
-                    </td>
-                    <td className="px-5 py-3 text-ink-600">{t.customer.name}</td>
-                    <td className="px-5 py-3">
-                      <Badge tone={PRIORITY_TONE[t.priority]}>
-                        {PRIORITY_LABEL[t.priority]}
-                      </Badge>
-                    </td>
-                    <td className="px-5 py-3">
-                      <Badge tone={STATUS_TONE[t.status]}>
-                        {STATUS_LABEL[t.status]}
-                      </Badge>
-                    </td>
-                    <td className="px-5 py-3 text-ink-500 text-xs">
-                      {formatRelative(t.updated_at)}
-                    </td>
-                  </tr>
-                ))}
-                {recent && recent.results.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="px-5 py-10 text-center text-ink-400">
-                      No tickets yet. Create your first one from the inbox.
-                    </td>
-                  </tr>
-                ) : null}
-              </tbody>
-            </table>
-          </div>
-        </CardBody>
-      </Card>
-    </div>
+      <NewTicketModal open={showTicketModal} onClose={() => setShowTicketModal(false)} />
+      <NewCustomerModal open={showCustomerModal} onClose={() => setShowCustomerModal(false)} />
+    </>
   );
-}
-
-function Skeleton({ className = "" }: { className?: string }) {
-  return <div className={`bg-ink-100 animate-pulse ${className}`} />;
 }
 
 function ApiError() {
   return (
-    <div className="text-sm text-danger">
+    <div className="text-sm text-red-600">
       Could not reach the API. Confirm the Django container is running on
-      <code className="ml-1 font-mono text-xs bg-ink-100 px-1 py-0.5">
-        :8000
-      </code>
+      <code className="ml-1 font-mono text-xs bg-ink-100 px-1 py-0.5">:8000</code>
       .
     </div>
+  );
+}
+
+/* Icons */
+function ChatIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
+function PeopleIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+function TicketSquareIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="18" height="18" />
+      <path d="M9 9h6v6H9z" />
+    </svg>
+  );
+}
+function FilterIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
+    </svg>
+  );
+}
+function ListIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+    </svg>
   );
 }

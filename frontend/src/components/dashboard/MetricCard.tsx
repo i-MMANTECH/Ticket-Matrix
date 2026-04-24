@@ -1,39 +1,37 @@
 // Emmanuel Aro's project submission for evaluation.
+import type { ReactNode } from "react";
+
 import { Card } from "@/components/ui/Card";
+
+type Tone = "green" | "blue" | "purple" | "red";
+
+const TILE_BG: Record<Tone, string> = {
+  green:  "bg-tile-green text-brand-700",
+  blue:   "bg-tile-blue text-status-inProgressFg",
+  purple: "bg-tile-purple text-purple-700",
+  red:    "bg-tile-red text-red-700",
+};
 
 export function MetricCard({
   label,
   value,
-  delta,
-  tone = "neutral",
+  tone,
+  icon,
 }: {
   label: string;
   value: number | string;
-  delta?: string;
-  tone?: "neutral" | "positive" | "warning" | "danger";
+  tone: Tone;
+  icon: ReactNode;
 }) {
-  const accent =
-    tone === "positive"
-      ? "border-l-2 border-success"
-      : tone === "warning"
-        ? "border-l-2 border-warning"
-        : tone === "danger"
-          ? "border-l-2 border-danger"
-          : "border-l-2 border-ink";
-
   return (
-    <Card className={`flex flex-col justify-between ${accent}`}>
-      <div className="px-5 pt-4">
-        <p className="text-[11px] uppercase tracking-widest text-ink-400">
-          {label}
-        </p>
-        <p className="mt-2 text-3xl font-semibold tracking-tight text-ink">
-          {value}
-        </p>
+    <Card className="px-5 py-5">
+      <div className={`inline-flex items-center justify-center h-11 w-11 mb-4 ${TILE_BG[tone]}`}>
+        {icon}
       </div>
-      <div className="px-5 pb-4 pt-3 text-xs text-ink-500">
-        {delta ?? <span className="text-ink-300">No change reported</span>}
-      </div>
+      <p className="text-sm text-ink-500">{label}</p>
+      <p className="mt-1 text-3xl font-semibold tracking-tight text-ink-900">
+        {value}
+      </p>
     </Card>
   );
 }
