@@ -138,6 +138,15 @@ Open:
 - **API:** http://localhost:8000/api/health/
 - **Django admin:** http://localhost:8000/admin/
 
+### Verify the Supabase connection (recommended)
+
+```bash
+docker compose exec backend python manage.py db_check
+# native: cd backend && python manage.py db_check
+```
+
+Reports the engine, host, database name, user, and Postgres server version. Falls back to a clear error if `DATABASE_URL` is unset or wrong.
+
 ### Seed demo data (optional but recommended)
 
 ```bash
@@ -230,11 +239,65 @@ After deploying the backend, update `frontend/.env.local` (and Vercel env vars) 
 
 These are the two AI blind spots called out in the brief — both handled:
 
-- **CORS:** `corsheaders` is in `INSTALLED_APPS`, `CorsMiddleware` is the very first middleware, and `CORS_ALLOWED_ORIGINS` reads from the env so dev / prod stay aligned. CSRF trusted origins mirror the same list. ([backend/ticket_matrix/settings.py:74-76](backend/ticket_matrix/settings.py#L74-L76), [backend/ticket_matrix/settings.py:154-162](backend/ticket_matrix/settings.py#L154-L162))
-- **Responsiveness:** Sidebar collapses below `lg`, tickets table swaps to a card list below `md` ([TicketsTable.tsx](frontend/src/components/tickets/TicketsTable.tsx)), grid layouts step from `grid-cols-1` → `grid-cols-2/3/4` at standard breakpoints, modal scales with `max-w-2xl` + scroll inside.
+- **CORS:** `corsheaders` is in `INSTALLED_APPS`, `CorsMiddleware` is the very first middleware, and `CORS_ALLOWED_ORIGINS` reads from the env so dev / prod stay aligned. CSRF trusted origins mirror the same list. ([backend/ticket_matrix/settings.py](backend/ticket_matrix/settings.py))
+- **Responsiveness:** Desktop sidebar shows at `lg+`; below `lg` a hamburger in the topbar opens a slide-in drawer ([MobileNav.tsx](frontend/src/components/layout/MobileNav.tsx)). The Customers page uses a full table at `md+` and a stacked card list below `md` ([customers/page.tsx](frontend/src/app/(dashboard)/customers/page.tsx)). Tickets render as cards that flow `flex-col → flex-row` at `sm`. All grids step from `grid-cols-1` → `grid-cols-2/3/4` at standard breakpoints. Manually verified at 360 / 768 / 1024 / 1440 px.
 
 ---
 
-## 11. Authorship
+## 11. Plan compliance — mapping the brief to this repo
+
+This table maps every requirement from the assessment brief (`Ticket-Matrix Plan.docx`) to the file or commit that implements it, so reviewers can audit the submission line-by-line.
+
+### Phase 1 — Frontend & UI Extrapolation
+
+| Brief item | Where it lives |
+|---|---|
+| Replicate Figma: **Dashboard** (top metric cards + completion-rate chart) | [frontend/src/app/(dashboard)/dashboard/page.tsx](frontend/src/app/(dashboard)/dashboard/page.tsx), [MetricCard.tsx](frontend/src/components/dashboard/MetricCard.tsx), [CompletionChart.tsx](frontend/src/components/dashboard/CompletionChart.tsx), [QuickActions.tsx](frontend/src/components/dashboard/QuickActions.tsx) |
+| Replicate Figma: **Tickets List** (status tiles + card list with progress) | [frontend/src/app/(dashboard)/tickets/page.tsx](frontend/src/app/(dashboard)/tickets/page.tsx), [TicketCard.tsx](frontend/src/components/tickets/TicketCard.tsx), [StatusMetricCard.tsx](frontend/src/components/tickets/StatusMetricCard.tsx) |
+| Replicate Figma: **New Ticket Modal** (functional form posting to API) | [NewTicketModal.tsx](frontend/src/components/tickets/NewTicketModal.tsx) |
+| **Extrapolated Ticket Details** view (not in Figma) | [frontend/src/app/(dashboard)/tickets/[id]/page.tsx](frontend/src/app/(dashboard)/tickets/[id]/page.tsx) |
+| **Extrapolated Add-Comment** flow (not in Figma) | [CommentComposer.tsx](frontend/src/components/tickets/CommentComposer.tsx) |
+| Bonus: **Customers** page also rendered from the Figma set | [frontend/src/app/(dashboard)/customers/page.tsx](frontend/src/app/(dashboard)/customers/page.tsx), [NewCustomerModal.tsx](frontend/src/components/customers/NewCustomerModal.tsx), [ChannelIcons.tsx](frontend/src/components/customers/ChannelIcons.tsx), [TagBadge.tsx](frontend/src/components/customers/TagBadge.tsx) |
+| Routing: **View Ticket** click → dynamic detail page | `Link href={\`/tickets/\${id}\`}` in [TicketCard.tsx](frontend/src/components/tickets/TicketCard.tsx) |
+| Strict design-system rule: **zero border-radius** across the surface | [tailwind.config.ts](frontend/tailwind.config.ts) (radius tokens remapped to 0) + global `*` rule in [globals.css](frontend/src/app/globals.css) |
+
+### Phase 2 — Backend & Architecture
+
+| Brief item | Where it lives |
+|---|---|
+| **Customer** model (Name, Email, plus phone/company/tag/channels) | [apps/customers/models.py](backend/apps/customers/models.py) |
+| **Ticket** model (FK Customer; subject/description/priority/category/status + assignee/progress) | [apps/tickets/models.py](backend/apps/tickets/models.py) |
+| **Comment** model (FK Ticket; content + timestamp + author) | [apps/tickets/models.py](backend/apps/tickets/models.py) |
+| Standard CRUD: list / create / retrieve tickets, add comments | [apps/tickets/views.py](backend/apps/tickets/views.py), [apps/customers/views.py](backend/apps/customers/views.py) |
+| **Logic challenge — aggregation endpoint for completion-rate chart** | `TicketStatsView` at [apps/tickets/views.py](backend/apps/tickets/views.py) → exposed at `GET /api/tickets/stats/` (ORM `.values().annotate(Count())` over status / priority / category, plus `TruncMonth` series for the bar chart) |
+
+### Phase 3 — Delivery & Git Workflow
+
+| Brief item | Where it lives |
+| --- | --- |
+| GitHub repository (public/shared) | [Tech4mation/EmmanuelEvaluation2](https://github.com/Tech4mation/EmmanuelEvaluation2) |
+| **Atomic, descriptive commits** | `git log --oneline` — every commit follows `feat:` / `chore:` / `docs:` and isolates a single concern (e.g. `feat(frontend): rebuild dashboard with metric tiles, bar chart, and quick actions`) |
+| **Detailed README** with clone / setup / run instructions | This file (sections 1-10) |
+| **Postman collection** for manual API verification | [docs/postman/TicketMatrix.postman_collection.json](docs/postman/TicketMatrix.postman_collection.json) + [step-by-step guide](docs/postman/README.md) |
+
+### Architectural blind-spots called out in the brief
+
+| Blind spot | Resolution |
+| --- | --- |
+| **CORS between Next.js and Django** | `CorsMiddleware` placed first; `CORS_ALLOWED_ORIGINS` + `CSRF_TRUSTED_ORIGINS` read from env ([settings.py](backend/ticket_matrix/settings.py)) so dev (`localhost:3000`) and prod (Vercel) stay aligned. |
+| **Mobile responsiveness** | Hamburger drawer below `lg` ([MobileNav.tsx](frontend/src/components/layout/MobileNav.tsx)), Customers swaps to card list below `md`, ticket cards stack `flex-col → flex-row` at `sm`, modals constrained with `max-w-xl` + inner scroll. |
+| **Frontend ↔ backend context hand-off** | Single typed API client at [frontend/src/lib/api.ts](frontend/src/lib/api.ts) mirrors every DRF serializer's shape, so any model field added on the backend is one type bump away from rendering. |
+
+### Free-tier choices (per submission constraint)
+
+| Layer | Provider |
+| --- | --- |
+| Database | **Supabase Free tier** — Postgres via Connection-pooling URI |
+| Frontend hosting | **Vercel Hobby** — instructions in §9 |
+| Backend hosting | **Render Free Web Service** (or **Fly.io** free allowance) — instructions in §9 |
+
+---
+
+## 12. Authorship
 
 Every major structural file in this repository — `manage.py`, `next.config.js`, `docker-compose.yml`, the Django settings module, all React entry points, this README — carries the watermark **"Emmanuel Aro's project submission for evaluation."** as a top-of-file comment.
