@@ -227,11 +227,11 @@ All pages are responsive (single-column mobile → multi-column desktop), keyboa
 
 | Service | Provider | Notes |
 |---|---|---|
-| Frontend | **Vercel** Hobby | `cd frontend && vercel --prod`. Set `NEXT_PUBLIC_API_BASE_URL` to your deployed API. |
-| Backend | **Render** Free Web Service or **Fly.io** | Use the existing `Dockerfile`. Set `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=False`, `DJANGO_ALLOWED_HOSTS`, `CORS_ALLOWED_ORIGINS`, `DATABASE_URL` env vars. Start command: `gunicorn ticket_matrix.wsgi --bind 0.0.0.0:$PORT`. |
-| Database | **Supabase** Free | Project provisioned in step 3. The app uses the Connection-pooling URI so it survives the free tier's connection cap. |
+| Frontend | **Vercel** Hobby | Connect the GitHub repo, set **Root Directory** to `frontend`, add env var `NEXT_PUBLIC_API_BASE_URL`. Works with private repos. |
+| Backend | **Render** Free Web Service | Connect the same repo, set **Root Directory** to `backend`, **Runtime: Docker**, override start command to Gunicorn. Free tier sleeps after 15 min idle (~30s cold start). |
+| Database | **Supabase** Free | Already provisioned (§3). The app uses the Connection-pooling URI so it survives the free tier's connection cap. |
 
-After deploying the backend, update `frontend/.env.local` (and Vercel env vars) so `NEXT_PUBLIC_API_BASE_URL` points at the deployed API, then add the Vercel domain to `CORS_ALLOWED_ORIGINS` on the backend.
+**Full step-by-step walkthrough** (env vars, build commands, CORS-loop closure, troubleshooting): [`docs/deploy/README.md`](docs/deploy/README.md). Deploy backend first to get the API URL, then frontend, then come back and add the Vercel domain to `CORS_ALLOWED_ORIGINS` on Render.
 
 ---
 
