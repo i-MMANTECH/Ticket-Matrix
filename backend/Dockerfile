@@ -25,4 +25,8 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Production-friendly default: apply migrations, seed demo data (idempotent),
+# then start Gunicorn. Honours $PORT (Render injects this) but falls back to
+# 8000 for local Docker. Compose overrides this CMD with `runserver` for
+# hot-reload during local dev.
+CMD sh -c "python manage.py migrate --noinput && python manage.py seed_demo && gunicorn ticket_matrix.wsgi --bind 0.0.0.0:${PORT:-8000} --workers 2"
