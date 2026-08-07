@@ -106,7 +106,7 @@ export function NewTicketModal({
           <Label htmlFor="customer_name">Customer Name</Label>
           <Input
             id="customer_name"
-            placeholder="Joseph Olorunmeyan"
+            placeholder="Emmanuel Aro"
             value={form.customer_name}
             onChange={(e) => update("customer_name", e.target.value)}
             required
