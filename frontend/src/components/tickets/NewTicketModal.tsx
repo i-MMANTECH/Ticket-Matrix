@@ -61,7 +61,7 @@ export function NewTicketModal({
     // customer flow works with just the name field shown in the design.
     const synthesizedEmail =
       form.customer_email?.trim() ||
-      `${form.customer_name.trim().toLowerCase().replace(/\s+/g, ".")}@nativetalk.test`;
+      `${form.customer_name.trim().toLowerCase().replace(/\s+/g, ".")}@geod-talk.test`;
 
     setSubmitting(true);
     try {

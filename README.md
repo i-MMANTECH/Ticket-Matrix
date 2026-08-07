@@ -1,8 +1,8 @@
 <!-- Emmanuel Aro's project submission for evaluation. -->
 
-# Ticket Matrix — Nativetalk Ticketing Module (Upgraded Portfolio Edition)
+# Ticket Matrix — Geod Talk Ticketing Module (Upgraded Portfolio Edition)
 
-A full-stack ticketing module originally built as **Emmanuel Aro's project submission for evaluation** at the Tech4mation Ltd internship, and later extensively upgraded as a portfolio piece. It replicates the Nativetalk CRM ticketing experience (Dashboard, Tickets inbox, New Ticket flow) and extrapolates the missing **Ticket Details** view and **Comment** thread.
+A full-stack ticketing module originally built as **Emmanuel Aro's project submission for evaluation** at the Tech4mation Ltd internship, and later extensively upgraded as a portfolio piece. It replicates the Geod Talk CRM ticketing experience (Dashboard, Tickets inbox, New Ticket flow) and extrapolates the missing **Ticket Details** view and **Comment** thread.
 
 ### ✨ Upgrades in this version
 - **Premium UI Overhaul:** Smooth micro-animations with Framer Motion, refined typography, and a modernized, softer design language.

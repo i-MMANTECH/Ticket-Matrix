@@ -4,59 +4,90 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   content: ["./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
-    // Removed hard reset to allow default Tailwind rounded utilities
     extend: {
       colors: {
-        // Nativetalk brand
         brand: {
-          DEFAULT: "#16A34A",   // primary green (buttons, active state, accent)
-          50:  "#ECFDF5",
-          100: "#D1FAE5",
-          200: "#A7F3D0",
-          500: "#16A34A",
-          600: "#15803D",
-          700: "#166534",
+          DEFAULT: "#4d6bfe",
+          soft: "#4d6bfe80",
+          glow: "#76e8ff",
+        },
+        accent: {
+          DEFAULT: "#76e8ff",
+        },
+        fg: {
+          DEFAULT: "#ffffff",
+          muted: "rgba(255, 255, 255, 0.7)",
+          subtle: "rgba(255, 255, 255, 0.4)",
+        },
+        bg: {
+          DEFAULT: "#07040c",
+          soft: "rgba(7, 4, 12, 0.6)",
         },
         ink: {
-          DEFAULT: "#0F172A",
-          50: "#F8FAFC",
-          100: "#F1F5F9",
-          200: "#E2E8F0",
-          300: "#CBD5E1",
-          400: "#94A3B8",
-          500: "#64748B",
-          600: "#475569",
-          700: "#334155",
-          800: "#1E293B",
-          900: "#0F172A",
+          DEFAULT: "#ffffff",
+          50: "#0F172A",
+          100: "#1E293B",
+          200: "#334155",
+          300: "#475569",
+          400: "#64748B",
+          500: "#94A3B8",
+          600: "#CBD5E1",
+          700: "#E2E8F0",
+          800: "#F1F5F9",
+          900: "#F8FAFC",
         },
-        // Status / priority palette (matches Figma chips)
         status: {
-          highBg:       "#FEE2E2", highFg:       "#B91C1C",
-          mediumBg:     "#FEF3C7", mediumFg:     "#B45309",
-          lowBg:        "#F1F5F9", lowFg:        "#475569",
-          inProgressBg: "#DBEAFE", inProgressFg: "#1D4ED8",
-          doneBg:       "#DCFCE7", doneFg:       "#15803D",
-          overdueBg:    "#FFEDD5", overdueFg:    "#C2410C",
-          todoBg:       "#F1F5F9", todoFg:       "#475569",
+          highBg:       "rgba(185, 28, 28, 0.2)", highFg:       "#FCA5A5",
+          mediumBg:     "rgba(180, 83, 9, 0.2)", mediumFg:     "#FDE68A",
+          lowBg:        "rgba(255, 255, 255, 0.1)", lowFg:        "#CBD5E1",
+          inProgressBg: "rgba(29, 78, 216, 0.2)", inProgressFg: "#93C5FD",
+          doneBg:       "rgba(21, 128, 61, 0.2)", doneFg:       "#86EFAC",
+          overdueBg:    "rgba(194, 65, 12, 0.2)", overdueFg:    "#FDBA74",
+          todoBg:       "rgba(255, 255, 255, 0.1)", todoFg:       "#CBD5E1",
         },
-        // Metric icon tile backgrounds
         tile: {
-          green:  "#DCFCE7",
-          blue:   "#DBEAFE",
-          purple: "#EDE9FE",
-          red:    "#FEE2E2",
+          green:  "rgba(21, 128, 61, 0.15)",
+          blue:   "rgba(29, 78, 216, 0.15)",
+          purple: "rgba(109, 40, 217, 0.15)",
+          red:    "rgba(185, 28, 28, 0.15)",
         },
-        canvas: "#F7F8FA",
-        line:   "#E5E7EB",
-        surface:"#FFFFFF",
+        canvas: "#07040c",
+        line:   "rgba(255, 255, 255, 0.1)",
+        surface:"rgba(255, 255, 255, 0.03)",
       },
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "ui-monospace", "monospace"],
       },
       boxShadow: {
-        card: "0 1px 0 0 rgba(15, 23, 42, 0.04), 0 1px 2px 0 rgba(15, 23, 42, 0.04)",
+        card: "0 4px 24px -4px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.05)",
+        brand: "0 0 25px rgba(77, 107, 254, 0.5)",
+        soft: "0 4px 12px rgba(0, 0, 0, 0.3)",
+      },
+      animation: {
+        "float-soft": "float-soft 3s ease-in-out infinite",
+        "pulse": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "nebula-drift-a": "nebula-drift-a 20s infinite alternate",
+        "nebula-drift-b": "nebula-drift-b 25s infinite alternate",
+        "nebula-drift-c": "nebula-drift-c 30s infinite alternate",
+      },
+      keyframes: {
+        "float-soft": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
+        },
+        "nebula-drift-a": {
+          "0%": { transform: "translate(0, 0) scale(1)" },
+          "100%": { transform: "translate(5%, 10%) scale(1.1)" },
+        },
+        "nebula-drift-b": {
+          "0%": { transform: "translate(0, 0) scale(1)" },
+          "100%": { transform: "translate(-5%, 8%) scale(1.15)" },
+        },
+        "nebula-drift-c": {
+          "0%": { transform: "translate(0, 0) scale(1)" },
+          "100%": { transform: "translate(8%, -5%) scale(1.05)" },
+        },
       },
     },
   },

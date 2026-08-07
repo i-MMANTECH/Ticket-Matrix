@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "1e2d4c8a-7c64-4b7d-8e11-emmanuel-aro-tm",
     "name": "Ticket Matrix API",
-    "description": "Emmanuel Aro's project submission for evaluation. Full CRUD + aggregation collection for the Nativetalk ticketing module backend (Django REST Framework). Set the `base_url` collection variable to your API root (defaults to http://localhost:8000/api).",
+    "description": "Emmanuel Aro's project submission for evaluation. Full CRUD + aggregation collection for the Geod Talk ticketing module backend (Django REST Framework). Set the `base_url` collection variable to your API root (defaults to http://localhost:8000/api).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -60,7 +60,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Adaeze Okafor\",\n  \"email\": \"adaeze+postman@nativetalk.test\",\n  \"phone\": \"+234 810 179 0957\",\n  \"company\": \"Nativetalk Africa\",\n  \"tag\": \"vip\",\n  \"channels\": [\"instagram\", \"facebook\", \"whatsapp\"]\n}"
+              "raw": "{\n  \"name\": \"Adaeze Okafor\",\n  \"email\": \"adaeze+postman@geod-talk.test\",\n  \"phone\": \"+234 810 179 0957\",\n  \"company\": \"Geod Talk Africa\",\n  \"tag\": \"vip\",\n  \"channels\": [\"instagram\", \"facebook\", \"whatsapp\"]\n}"
             },
             "url": {
               "raw": "{{base_url}}/customers/",
@@ -88,7 +88,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"company\": \"Nativetalk Group\",\n  \"tag\": \"frequent\",\n  \"channels\": [\"whatsapp\", \"email\"]\n}"
+              "raw": "{\n  \"company\": \"Geod Talk Group\",\n  \"tag\": \"frequent\",\n  \"channels\": [\"whatsapp\", \"email\"]\n}"
             },
             "url": {
               "raw": "{{base_url}}/customers/{{customer_id}}/",
@@ -154,7 +154,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"subject\": \"Cannot send bulk SMS campaign\",\n  \"description\": \"Trying to launch a campaign to 5,000 contacts but the dashboard returns a generic error after upload.\",\n  \"priority\": \"urgent\",\n  \"category\": \"technical\",\n  \"status\": \"in_progress\",\n  \"assignee\": \"Support Tier 2\",\n  \"progress\": 25,\n  \"customer_name\": \"Adaeze Okafor\",\n  \"customer_email\": \"adaeze+postman@nativetalk.test\"\n}"
+              "raw": "{\n  \"subject\": \"Cannot send bulk SMS campaign\",\n  \"description\": \"Trying to launch a campaign to 5,000 contacts but the dashboard returns a generic error after upload.\",\n  \"priority\": \"urgent\",\n  \"category\": \"technical\",\n  \"status\": \"in_progress\",\n  \"assignee\": \"Support Tier 2\",\n  \"progress\": 25,\n  \"customer_name\": \"Adaeze Okafor\",\n  \"customer_email\": \"adaeze+postman@geod-talk.test\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/tickets/",
@@ -243,7 +243,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"author_name\": \"Support Agent\",\n  \"author_email\": \"support@nativetalk.test\",\n  \"content\": \"Thanks for raising this — investigating now.\"\n}"
+              "raw": "{\n  \"author_name\": \"Support Agent\",\n  \"author_email\": \"support@geod-talk.test\",\n  \"content\": \"Thanks for raising this — investigating now.\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/tickets/{{ticket_id}}/comments/",

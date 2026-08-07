@@ -3,9 +3,9 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Nativetalk · Ticketing",
+  title: "Geod Talk · Ticketing",
   description:
-    "Ticketing module for Nativetalk — Emmanuel Aro's project submission for evaluation.",
+    "Ticketing module for Geod Talk — A subsidiary of Geod. Emmanuel Aro's project submission for evaluation.",
 };
 
 export const viewport: Viewport = {

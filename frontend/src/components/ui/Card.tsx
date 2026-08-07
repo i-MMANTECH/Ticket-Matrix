@@ -8,7 +8,7 @@ export function Card({
   return (
     <div
       {...rest}
-      className={`bg-white rounded-xl border border-line shadow-md ${className}`}
+      className={`glass-neo rounded-xl border border-line shadow-soft transition-all hover:border-brand/40 hover:shadow-brand ${className}`}
     />
   );
 }
@@ -32,7 +32,7 @@ export function CardTitle({
   return (
     <h2
       {...rest}
-      className={`text-sm font-semibold text-ink-900 ${className}`}
+      className={`text-sm font-semibold text-white tracking-wide ${className}`}
     />
   );
 }

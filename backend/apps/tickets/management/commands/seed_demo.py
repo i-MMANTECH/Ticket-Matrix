@@ -19,14 +19,14 @@ from apps.tickets.models import Comment, Ticket
 
 
 DEMO_CUSTOMERS = [
-    {"name": "Adaeze Okafor",     "email": "adaeze@nativetalk.test",   "company": "Nativetalk Africa",   "phone": "+234 810 179 0957", "tag": "vip",      "channels": ["instagram", "facebook", "whatsapp"]},
-    {"name": "Tunde Bakare",      "email": "tunde@nativetalk.test",    "company": "Bakare Holdings",     "phone": "+234 802 411 8842", "tag": "frequent", "channels": ["whatsapp", "email"]},
-    {"name": "Chiamaka Eze",      "email": "chiamaka@nativetalk.test", "company": "Eze & Co",            "phone": "+234 814 553 2210", "tag": "vip",      "channels": ["facebook", "whatsapp"]},
-    {"name": "Ibrahim Suleiman",  "email": "ibrahim@nativetalk.test",  "company": "Suleiman Logistics",  "phone": "+234 808 661 7745", "tag": "frequent", "channels": ["instagram", "whatsapp"]},
-    {"name": "Funke Adebayo",     "email": "funke@nativetalk.test",    "company": "Adebayo Foods",       "phone": "+234 803 920 4118", "tag": "new",      "channels": ["whatsapp"]},
-    {"name": "Ogechi Arinze",     "email": "ogechi@nativetalk.test",   "company": "Arinze Studio",       "phone": "+234 810 179 0957", "tag": "vip",      "channels": ["instagram", "facebook", "whatsapp"]},
-    {"name": "Salim Yusuf",       "email": "salim@nativetalk.test",    "company": "Yusuf Trading",       "phone": "+234 909 220 1180", "tag": "frequent", "channels": ["sms", "whatsapp"]},
-    {"name": "Kemi Onayemi",      "email": "kemi@nativetalk.test",     "company": "Onayemi Health",      "phone": "+234 705 884 9011", "tag": "new",      "channels": ["email"]},
+    {"name": "Adaeze Okafor",     "email": "adaeze@geod-talk.test",   "company": "Geod Talk Africa",   "phone": "+234 810 179 0957", "tag": "vip",      "channels": ["instagram", "facebook", "whatsapp"]},
+    {"name": "Tunde Bakare",      "email": "tunde@geod-talk.test",    "company": "Bakare Holdings",     "phone": "+234 802 411 8842", "tag": "frequent", "channels": ["whatsapp", "email"]},
+    {"name": "Chiamaka Eze",      "email": "chiamaka@geod-talk.test", "company": "Eze & Co",            "phone": "+234 814 553 2210", "tag": "vip",      "channels": ["facebook", "whatsapp"]},
+    {"name": "Ibrahim Suleiman",  "email": "ibrahim@geod-talk.test",  "company": "Suleiman Logistics",  "phone": "+234 808 661 7745", "tag": "frequent", "channels": ["instagram", "whatsapp"]},
+    {"name": "Funke Adebayo",     "email": "funke@geod-talk.test",    "company": "Adebayo Foods",       "phone": "+234 803 920 4118", "tag": "new",      "channels": ["whatsapp"]},
+    {"name": "Ogechi Arinze",     "email": "ogechi@geod-talk.test",   "company": "Arinze Studio",       "phone": "+234 810 179 0957", "tag": "vip",      "channels": ["instagram", "facebook", "whatsapp"]},
+    {"name": "Salim Yusuf",       "email": "salim@geod-talk.test",    "company": "Yusuf Trading",       "phone": "+234 909 220 1180", "tag": "frequent", "channels": ["sms", "whatsapp"]},
+    {"name": "Kemi Onayemi",      "email": "kemi@geod-talk.test",     "company": "Onayemi Health",      "phone": "+234 705 884 9011", "tag": "new",      "channels": ["email"]},
 ]
 
 DEMO_TICKETS = [
@@ -84,7 +84,7 @@ class Command(BaseCommand):
                 Comment.objects.create(
                     ticket=ticket,
                     author_name=customer.name if ci == 0 else "Support Agent",
-                    author_email=customer.email if ci == 0 else "support@nativetalk.test",
+                    author_email=customer.email if ci == 0 else "support@geod-talk.test",
                     content=body,
                 )
 
