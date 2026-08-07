@@ -1,5 +1,8 @@
 // Emmanuel Aro's project submission for evaluation.
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 import { Badge } from "@/components/ui/Badge";
 import {
@@ -17,7 +20,10 @@ export function TicketCard({ ticket }: { ticket: TicketListItem }) {
   const progress = Math.max(0, Math.min(100, ticket.progress ?? 0));
 
   return (
-    <article className="bg-white border border-line shadow-card hover:border-ink-300 transition-colors">
+    <motion.article 
+      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      className="bg-white rounded-xl border border-line shadow-card hover:shadow-md hover:border-ink-300 transition-all"
+    >
       <div className="p-5 flex flex-col sm:flex-row sm:items-center gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
@@ -75,7 +81,7 @@ export function TicketCard({ ticket }: { ticket: TicketListItem }) {
           </Link>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
 

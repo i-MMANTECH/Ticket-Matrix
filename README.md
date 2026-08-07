@@ -1,8 +1,12 @@
 <!-- Emmanuel Aro's project submission for evaluation. -->
 
-# Ticket Matrix — Nativetalk Ticketing Module
+# Ticket Matrix — Nativetalk Ticketing Module (Upgraded Portfolio Edition)
 
-A full-stack ticketing module built as **Emmanuel Aro's project submission for evaluation** at the Tech4mation Ltd internship. It replicates the Nativetalk CRM ticketing experience (Dashboard, Tickets inbox, New Ticket flow) and extrapolates the missing **Ticket Details** view and **Comment** thread directly from the existing visual language.
+A full-stack ticketing module originally built as **Emmanuel Aro's project submission for evaluation** at the Tech4mation Ltd internship, and later extensively upgraded as a portfolio piece. It replicates the Nativetalk CRM ticketing experience (Dashboard, Tickets inbox, New Ticket flow) and extrapolates the missing **Ticket Details** view and **Comment** thread.
+
+### ✨ Upgrades in this version
+- **Premium UI Overhaul:** Smooth micro-animations with Framer Motion, refined typography, and a modernized, softer design language.
+- **API Documentation:** Integrated Swagger/OpenAPI documentation via `drf-spectacular` for a production-ready developer experience.
 
 | Layer | Technology |
 |---|---|
@@ -12,7 +16,7 @@ A full-stack ticketing module built as **Emmanuel Aro's project submission for e
 | Container | Docker · `docker-compose` (single command spins up the full stack) |
 | API Testing | Postman v2.1.0 collection in [`docs/postman/`](docs/postman) |
 
-> **Design rule:** zero border-radius across the entire surface. The reset is enforced both by overriding `borderRadius` in [tailwind.config.ts](frontend/tailwind.config.ts) **and** by a `*` rule in [globals.css](frontend/src/app/globals.css#L24) so stray inline radii cannot leak through.
+> **Design upgrade:** The UI now features subtle rounded corners and `framer-motion` micro-animations for a more modern, premium feel.
 
 ---
 

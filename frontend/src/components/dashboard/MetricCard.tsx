@@ -25,7 +25,7 @@ export function MetricCard({
 }) {
   return (
     <Card className="px-5 py-5">
-      <div className={`inline-flex items-center justify-center h-11 w-11 mb-4 ${TILE_BG[tone]}`}>
+      <div className={`inline-flex items-center justify-center rounded-lg h-11 w-11 mb-4 ${TILE_BG[tone]}`}>
         {icon}
       </div>
       <p className="text-sm text-ink-500">{label}</p>

@@ -22,15 +22,8 @@ body {
 }
 
 /*
- * Strict design enforcement: zero border-radius across the entire surface.
- * Honors the architectural design rule even when third-party components or
- * stray inline styles try to round corners.
+ * Removed strict zero border-radius rule for a more modern, premium design.
  */
-*,
-*::before,
-*::after {
-  border-radius: 0 !important;
-}
 
 ::-webkit-scrollbar {
   width: 10px;

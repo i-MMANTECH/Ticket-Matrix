@@ -4,19 +4,7 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   content: ["./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
-    // Hard reset: every Tailwind radius utility resolves to 0 so the entire
-    // surface area of the app honours the "no border-radius" design rule.
-    borderRadius: {
-      none: "0px",
-      sm: "0px",
-      DEFAULT: "0px",
-      md: "0px",
-      lg: "0px",
-      xl: "0px",
-      "2xl": "0px",
-      "3xl": "0px",
-      full: "0px",
-    },
+    // Removed hard reset to allow default Tailwind rounded utilities
     extend: {
       colors: {
         // Nativetalk brand

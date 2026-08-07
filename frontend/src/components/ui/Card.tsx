@@ -8,7 +8,7 @@ export function Card({
   return (
     <div
       {...rest}
-      className={`bg-white border border-line shadow-card ${className}`}
+      className={`bg-white rounded-xl border border-line shadow-md ${className}`}
     />
   );
 }
