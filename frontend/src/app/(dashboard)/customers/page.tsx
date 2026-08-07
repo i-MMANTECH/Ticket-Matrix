@@ -33,14 +33,14 @@ export default function CustomersPage() {
       <div className="space-y-5">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-center gap-3">
           <div className="relative w-full sm:max-w-md">
-            <span className="absolute inset-y-0 left-3 inline-flex items-center text-ink-400">
+            <span className="absolute inset-y-0 left-3 inline-flex items-center text-white/40">
               <SearchIcon />
             </span>
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search"
-              className="w-full bg-white border border-line pl-9 pr-3 py-2 text-sm focus:outline-none focus:border-ink-400"
+              className="w-full bg-white/5 border border-white/10 text-white placeholder-white/40 pl-9 pr-3 py-2 text-sm focus:outline-none focus:border-brand-500 rounded-lg"
             />
           </div>
           <Button onClick={() => setShowModal(true)} className="sm:w-auto w-full">
@@ -66,18 +66,18 @@ export default function CustomersPage() {
             </div>
           ) : (
             data.results.map((customer) => (
-              <div key={customer.id} className="bg-white border border-line shadow-card p-4">
+              <div key={customer.id} className="glass-neo rounded-xl p-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 bg-ink-200 text-ink-700 text-xs font-semibold flex items-center justify-center">
+                  <div className="h-9 w-9 bg-white/10 text-white rounded-full text-xs font-semibold flex items-center justify-center">
                     {initials(customer.name)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-ink-900 truncate">{customer.name}</p>
-                    <p className="text-xs text-ink-500 truncate">{customer.email}</p>
+                    <p className="text-sm font-medium text-white/90 truncate">{customer.name}</p>
+                    <p className="text-xs text-white/60 truncate">{customer.email}</p>
                   </div>
                   <TagBadge tag={customer.tag} />
                 </div>
-                <div className="mt-3 flex items-center justify-between text-xs text-ink-500">
+                <div className="mt-3 flex items-center justify-between text-xs text-white/60">
                   <span>{customer.phone || "—"}</span>
                   <ChannelIcons channels={customer.channels} />
                 </div>
@@ -95,8 +95,8 @@ export default function CustomersPage() {
         <Card className="hidden md:block">
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
-              <thead className="border-b border-line">
-                <tr className="text-left text-[12px] text-ink-500">
+              <thead className="border-b border-white/10">
+                <tr className="text-left text-[12px] text-white/50">
                   <th className="px-5 py-3 font-medium">
                     <span className="inline-flex items-center gap-2">
                       <CheckboxIcon /> Customer Name
@@ -138,22 +138,22 @@ export default function CustomersPage() {
                   </tr>
                 ) : (
                   data.results.map((customer) => (
-                    <tr key={customer.id} className="border-b border-line last:border-b-0 hover:bg-ink-50/40">
+                    <tr key={customer.id} className="border-b border-white/10 last:border-b-0 hover:bg-white/5">
                       <td className="px-5 py-3">
                         <div className="flex items-center gap-3">
-                          <input type="checkbox" className="h-4 w-4 accent-brand border border-ink-300" />
-                          <div className="h-8 w-8 bg-ink-200 text-ink-700 text-[11px] font-semibold flex items-center justify-center">
+                          <input type="checkbox" className="h-4 w-4 accent-brand border border-white/20 bg-white/5" />
+                          <div className="h-8 w-8 bg-white/10 text-white rounded-full text-[11px] font-semibold flex items-center justify-center">
                             {initials(customer.name)}
                           </div>
-                          <span className="text-ink-800">{customer.name}</span>
+                          <span className="text-white/90 font-medium">{customer.name}</span>
                         </div>
                       </td>
-                      <td className="px-5 py-3 text-ink-600">{customer.email}</td>
-                      <td className="px-5 py-3 text-ink-600">{customer.phone || "—"}</td>
+                      <td className="px-5 py-3 text-white/70">{customer.email}</td>
+                      <td className="px-5 py-3 text-white/70">{customer.phone || "—"}</td>
                       <td className="px-5 py-3"><ChannelIcons channels={customer.channels} /></td>
                       <td className="px-5 py-3"><TagBadge tag={customer.tag} /></td>
-                      <td className="px-5 py-3 text-right text-ink-400">
-                        <button className="hover:text-ink-700" aria-label="Customer actions">⋯</button>
+                      <td className="px-5 py-3 text-right text-white/40">
+                        <button className="hover:text-white" aria-label="Customer actions">⋯</button>
                       </td>
                     </tr>
                   ))
@@ -163,7 +163,7 @@ export default function CustomersPage() {
           </div>
 
           {data ? (
-            <div className="flex items-center justify-between px-5 py-3 border-t border-line text-xs text-ink-500">
+            <div className="flex items-center justify-between px-5 py-3 border-t border-white/10 text-xs text-white/50">
               <span>
                 Showing {data.results.length} of {data.count} entries
               </span>
@@ -194,12 +194,12 @@ function PageButton({
   return (
     <button
       disabled={disabled}
-      className={`h-7 min-w-[28px] px-2 text-xs border ${
+      className={`h-7 min-w-[28px] px-2 text-xs border rounded-md transition-colors ${
         active
-          ? "bg-brand text-white border-brand"
+          ? "bg-brand text-white border-brand shadow-[0_0_10px_rgba(77,107,254,0.4)]"
           : disabled
-            ? "bg-white text-ink-300 border-line"
-            : "bg-white text-ink-600 border-line hover:border-ink-300"
+            ? "bg-white/5 text-white/30 border-white/5"
+            : "bg-white/5 text-white/70 border-white/10 hover:border-white/30 hover:bg-white/10"
       }`}
     >
       {children}

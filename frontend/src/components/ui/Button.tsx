@@ -6,11 +6,11 @@ type Size = "sm" | "md";
 
 const VARIANTS: Record<Variant, string> = {
   primary:
-    "bg-brand text-white hover:bg-brand-600 disabled:bg-brand-200 disabled:cursor-not-allowed",
+    "bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-[0_0_15px_rgba(77,107,254,0.3)] border border-brand-400/50 hover:shadow-[0_0_25px_rgba(77,107,254,0.5)] disabled:opacity-50 disabled:cursor-not-allowed",
   secondary:
-    "bg-white text-ink-700 border border-ink-200 hover:border-ink-400 hover:bg-ink-50",
-  ghost: "bg-transparent text-ink-600 hover:bg-ink-100",
-  danger: "bg-red-600 text-white hover:bg-red-700",
+    "bg-white/5 text-white border border-white/10 hover:border-white/20 hover:bg-white/10",
+  ghost: "bg-transparent text-white/70 hover:bg-white/10 hover:text-white",
+  danger: "bg-red-600/80 text-white hover:bg-red-600 border border-red-500/50",
 };
 
 const SIZES: Record<Size, string> = {
@@ -32,7 +32,7 @@ export function Button({
   return (
     <button
       {...rest}
-      className={`inline-flex items-center justify-center gap-2 font-medium tracking-wide transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand ${VARIANTS[variant]} ${SIZES[size]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 font-medium tracking-wide transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-lg ${VARIANTS[variant]} ${SIZES[size]} ${className}`}
     />
   );
 }

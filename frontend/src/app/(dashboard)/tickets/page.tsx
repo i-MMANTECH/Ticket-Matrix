@@ -58,14 +58,14 @@ export default function TicketsPage() {
 
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="relative w-full max-w-sm">
-            <span className="absolute inset-y-0 left-3 inline-flex items-center text-ink-400">
+            <span className="absolute inset-y-0 left-3 inline-flex items-center text-white/40">
               <SearchIcon />
             </span>
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search"
-              className="w-full bg-white border border-line pl-9 pr-3 py-2 text-sm focus:outline-none focus:border-ink-400"
+              className="w-full bg-white/5 border border-white/10 text-white placeholder-white/40 pl-9 pr-3 py-2 text-sm focus:outline-none focus:border-brand-500 rounded-lg"
             />
           </div>
           <Button variant="primary">

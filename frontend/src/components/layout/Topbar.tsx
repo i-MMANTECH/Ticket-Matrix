@@ -17,18 +17,18 @@ export function Topbar() {
   const meta = TITLES.find((entry) => entry.match.test(pathname)) ?? TITLES[0];
 
   return (
-    <header className="bg-white border-b border-line sticky top-0 z-20">
+    <header className="bg-[#07040c]/80 backdrop-blur-md border-b border-white/10 sticky top-0 z-20">
       <div className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <MobileNav />
-          <h1 className="text-base sm:text-lg lg:text-xl font-semibold text-ink-900 tracking-tight">
+          <h1 className="text-base sm:text-lg lg:text-xl font-semibold text-white tracking-tight">
             {meta.title}
           </h1>
         </div>
 
         <button
           aria-label="Notifications"
-          className="relative h-9 w-9 inline-flex items-center justify-center text-ink-500 hover:bg-ink-50"
+          className="relative h-9 w-9 inline-flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
         >
           <BellIcon />
           <span className="absolute top-2 right-2 h-1.5 w-1.5 bg-brand" />

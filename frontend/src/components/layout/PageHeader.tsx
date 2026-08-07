@@ -12,11 +12,11 @@ export function PageHeader({
 }) {
   return (
     <div className="flex items-center justify-between flex-wrap gap-3">
-      <div className="inline-flex items-center gap-2 bg-white border border-line px-3 py-1.5 text-xs text-ink-600">
+      <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 text-xs text-white/60 rounded-lg">
         <CalendarIcon />
         <span>
           Last updated:{" "}
-          <span className="font-medium text-ink-800">
+          <span className="font-medium text-white/90">
             {lastUpdated ? formatDate(lastUpdated) : "—"}
           </span>
         </span>
